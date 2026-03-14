@@ -14,14 +14,15 @@
 ## Current Focus
 
 - Main goal: hands-on AWS + Nova learning for the hackathon
-- Current stage: just started
+- Current stage: AWS CLI setup
 - Active track: not fixed yet
 
 ---
 
 ## Progress Snapshot
 
-- [ ] AWS account/basic setup
+- [x] AWS account + IAM user with admin access
+- [ ] AWS CLI install + configure
 - [ ] Bedrock access/Nova access
 - [ ] First Nova experiment
 - [ ] First deeper experiment path chosen
@@ -32,13 +33,13 @@
 ## Log Entries
 
 ### Entry 001
-- Date:
-- Task completed:
-- What I did:
-- What worked:
-- What did not work:
-- Key thing learned:
-- Next step:
+- Date: 2026-03-14
+- Task completed: IAM account with administrative access
+- What I did: Created IAM user and attached AdministratorAccess policy
+- What worked: account created successfully
+- What did not work: -
+- Key thing learned: use IAM user for all work, not the root account
+- Next step: install AWS CLI and configure credentials
 
 ---
 
