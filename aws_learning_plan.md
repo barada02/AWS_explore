@@ -1,115 +1,147 @@
 # AWS Learning Plan — Amazon Nova Hackathon
-> Goal: Build a working Gen AI app with Amazon Nova. Learn only what's needed to ship.
+> Goal: Learn the minimum AWS + Nova needed for hands-on experimentation fast.
+
+> Updated for current AWS/Nova positioning as of March 2026. This plan is for learning and experiments, not for shipping a hackathon project.
 
 ---
 
-## Phase 1 — Setup (Do This First, ~1-2 hrs)
+## What matters first
 
-- [ ] Create an AWS account (or log into existing one)
-- [ ] Enable MFA on root account (takes 5 min, prevents lockout disasters)
-- [ ] Create an IAM user with programmatic access — attach `AmazonBedrockFullAccess` + `AmazonS3FullAccess`
-- [ ] Save the Access Key ID and Secret Access Key somewhere safe
-- [ ] Install AWS CLI → `winget install Amazon.AWSCLI`
-- [ ] Run `aws configure` and paste your keys + set region to `us-east-1` (Nova is available there)
-- [ ] Install boto3 → `pip install boto3`
-- [ ] Verify setup: run `aws sts get-caller-identity` — should return your account info
+- [ ] Remember this rule: **learn by running small experiments, not by reading everything**
+- [ ] Focus on only 2 things first:
+  - [ ] how to access Amazon Nova
+  - [ ] how to try one or two useful capabilities yourself
+- [ ] Ignore advanced AWS services unless they directly help your experiment
 
 ---
 
-## Phase 2 — Amazon Bedrock Core (~2-3 hrs)
-> Bedrock is the service that hosts Nova. This is your main AWS service.
+## Phase 1 — Basic AWS setup (~45-90 min)
 
-- [ ] Go to AWS Console → Bedrock → **Model Access** → Request access to all Amazon Nova models
-  - Nova Lite, Nova Pro, Nova Sonic, Nova Multimodal Embeddings
-  - Approval is usually instant or within minutes
-- [ ] Read: [Bedrock Converse API docs](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html) — this is the main API you'll use
-- [ ] Run your first Nova call with boto3:
-  ```python
-  import boto3, json
-  client = boto3.client("bedrock-runtime", region_name="us-east-1")
-  response = client.converse(
-      modelId="us.amazon.nova-lite-v1:0",
-      messages=[{"role": "user", "content": [{"text": "Hello!"}]}]
-  )
-  print(response["output"]["message"]["content"][0]["text"])
-  ```
-- [ ] Test streaming responses (`converse_stream`) — important for good UX
-- [ ] Understand the model IDs:
-  - `us.amazon.nova-lite-v1:0` — fast & cheap, use for most things
-  - `us.amazon.nova-pro-v1:0` — smarter, use when quality matters
-  - `us.amazon.nova-sonic-v1:0` — speech-to-speech (Voice AI track)
+- [ ] Create/sign in to your AWS account
+- [ ] Enable MFA on the root account
+- [ ] Create an IAM user for daily work
+- [ ] Give it only what you need for now:
+  - [ ] access to Amazon Bedrock
+  - [ ] access to S3 only if you need file-based experiments
+- [ ] Install AWS CLI
+- [ ] Run `aws configure`
+- [ ] Set your working region to the one where the Nova feature you want is available
+- [ ] Verify login with `aws sts get-caller-identity`
 
 ---
 
-## Phase 3 — Pick Your Track & Go Deep (~3-4 hrs)
-> Pick ONE track. Don't try to cover all of them.
+## Phase 2 — Understand where Nova fits (~30 min)
 
-### Track A: Agentic AI
-- [ ] Learn Bedrock tool use (function calling) — [docs](https://docs.aws.amazon.com/bedrock/latest/userguide/tool-use.html)
-- [ ] Build a simple agent loop: LLM decides → calls tool → gets result → continues
-- [ ] Try [Strands Agents SDK](https://strandsagents.com) (AWS's own agent framework, minimal boilerplate)
-- [ ] (Optional) Look at Bedrock Agents if you want fully managed orchestration
-
-### Track B: Multimodal Understanding
-- [ ] Test image input with Nova Lite — pass base64 image in the `content` array
-- [ ] Test document understanding — PDFs can be passed directly
-- [ ] Try Nova Multimodal Embeddings for semantic search across images+text
-- [ ] (Optional) Use S3 to store and reference large files instead of base64
-
-### Track C: Voice AI (Nova Sonic)
-- [ ] Read Nova Sonic docs — it uses a **bidirectional streaming** WebSocket API (different from Converse)
-- [ ] Set up the Nova Sonic SDK / sample from AWS GitHub
-- [ ] Build a basic real-time voice loop: mic → Sonic → speaker
-- [ ] Test latency — keep conversation turns short
-
-### Track D: UI Automation (Nova Act)
-- [ ] Sign up for Nova Act access at [aws.amazon.com/nova/act](https://aws.amazon.com/nova/act/)
-- [ ] Install the Nova Act SDK → `pip install nova-act`
-- [ ] Run the quickstart example from the docs
-- [ ] Pick a real web workflow to automate (e.g., form filling, data extraction from websites)
+- [ ] Learn this mental model:
+  - [ ] **Amazon Nova** = the models/services family
+  - [ ] **Amazon Bedrock** = the main AWS platform where you access many Nova models
+  - [ ] **Nova Act** = separate Nova service for browser/UI automation
+- [ ] Open the Amazon Nova page and skim what each offering is:
+  - [ ] Nova 2 Lite
+  - [ ] Nova 2 Sonic
+  - [ ] Nova Multimodal Embedding
+  - [ ] Nova Act
+- [ ] Do not try to learn all Nova products today
 
 ---
 
-## Phase 4 — Minimum Viable Project (~4-6 hrs)
+## Phase 3 — First hands-on with Nova through Bedrock (~1-2 hrs)
 
-- [ ] Define your project in one sentence before building
-- [ ] Build the core loop (input → Nova → output) first, make it work end to end
-- [ ] Add error handling and basic retry logic for API calls
-- [ ] Record your ~3 min demo video while the app works (don't wait until last minute)
-- [ ] Push code to a public GitHub repo
-- [ ] Write a short README explaining what it does and how to run it
-
----
-
-## Phase 5 — Submission Checklist
-
-- [ ] Text description written (project summary, how it uses Nova)
-- [ ] Demo video uploaded with `#AmazonNova` hashtag
-- [ ] GitHub repo link ready (make sure it's accessible)
-- [ ] Category selected: Agentic AI / Multimodal / UI Automation / Voice AI / Freestyle
-- [ ] Submit on Devpost before deadline
+- [ ] Open Amazon Bedrock in the AWS console
+- [ ] Request/enable access to the Amazon Nova models you actually want to test
+- [ ] Find the currently available model names in your console/docs before coding
+- [ ] Run one very small text experiment with Nova
+- [ ] Change only one variable at a time:
+  - [ ] prompt style
+  - [ ] system instruction
+  - [ ] response length
+- [ ] Save the prompts that worked well in a notes file
+- [ ] Try streaming output only if you need interactive behavior
 
 ---
 
-## 🕐 If You Have Extra Time (Bonus / Nice-to-Have)
+## Phase 4 — Pick one experiment path only (~2-4 hrs)
 
-- [ ] Write a blog post on [builder.aws.com](https://builder.aws.com) — earns bonus prize points
-- [ ] Add a simple web UI (Streamlit is the fastest: `pip install streamlit`)
-- [ ] Deploy to AWS Lambda + API Gateway for a live URL (impressive in demo)
-- [ ] Add S3 file upload so users can drop in their own files
-- [ ] Use Bedrock Guardrails to add content safety layer
-- [ ] Experiment with Nova Pro for better reasoning quality on complex tasks
+### Option A — Text / reasoning with Nova 2 Lite
+- [ ] Ask it to summarize a long note or article
+- [ ] Ask it to extract structured information from messy text
+- [ ] Ask it to compare two options and explain trade-offs
+- [ ] Write down where it performs well and where it fails
+
+### Option B — Multimodal understanding
+- [ ] Give it an image and ask factual questions
+- [ ] Try a document/PDF understanding task
+- [ ] Test whether the response is actually grounded in the input
+- [ ] If useful, try Nova Multimodal Embedding only after the basic tests work
+
+### Option C — Voice with Nova 2 Sonic
+- [ ] Read only the getting-started material for Sonic
+- [ ] Run one sample app/demo first
+- [ ] Test latency and conversation quality
+- [ ] Stop if setup becomes heavy and switch back to Lite unless voice is your main interest
+
+### Option D — UI automation with Nova Act
+- [ ] Read the quickstart only
+- [ ] Run one official sample first
+- [ ] Test one simple browser task end-to-end
+- [ ] Leave advanced workflow design for later
 
 ---
 
-## Quick Reference
+## Phase 5 — Useful AWS things to learn only if needed (~1-2 hrs)
 
-| Thing | Value |
-|---|---|
-| Main Region | `us-east-1` |
-| Nova Lite model ID | `us.amazon.nova-lite-v1:0` |
-| Nova Pro model ID | `us.amazon.nova-pro-v1:0` |
-| Nova Sonic model ID | `us.amazon.nova-sonic-v1:0` |
-| Bedrock Console | console.aws.amazon.com/bedrock |
-| Nova Docs | docs.aws.amazon.com/nova |
-| Strands Agents | strandsagents.com |
+- [ ] Learn S3 only if your experiments use files, images, PDFs, or outputs
+- [ ] Learn basic IAM only enough to avoid permission confusion
+- [ ] Learn CloudWatch only if you need logs for debugging
+- [ ] Skip Lambda, API Gateway, deployment, VPC, and full architecture topics for now
+
+---
+
+## Phase 6 — Capture learning, not a project (~30-45 min)
+
+- [ ] Keep a short log of every experiment:
+  - [ ] what you tried
+  - [ ] what worked
+  - [ ] what failed
+  - [ ] what to try next
+- [ ] Keep 3 best prompts/examples
+- [ ] Write 5-10 bullet points on what Nova seems good at
+- [ ] Write 3-5 bullet points on current limitations you observed
+
+---
+
+## If you get extra time
+
+- [ ] Compare Nova 2 Lite with another Nova option for the same task
+- [ ] Try tool use / agent behavior after basic prompting feels clear
+- [ ] Try embeddings only if search/retrieval actually matters to your exploration
+- [ ] Try S3-based file workflows if your inputs are large
+
+---
+
+## What to skip for now
+
+- [ ] Skip full project architecture
+- [ ] Skip deployment
+- [ ] Skip polished UI work
+- [ ] Skip advanced AWS networking/security topics
+- [ ] Skip services you are not actively using
+
+---
+
+## Quick clarification: Why Bedrock?
+
+- [ ] Because the current Amazon Nova foundation models are made available through Amazon Bedrock for most builder workflows
+- [ ] Because Bedrock is the place where you request model access and invoke many Nova models
+- [ ] Because the hackathon promotes **Nova**, but in practice many Nova experiments are done **through Bedrock**
+- [ ] Exception: **Nova Act** is its own Nova service, so not every Nova item means Bedrock
+
+---
+
+## Simple priority order
+
+- [ ] 1. AWS login + CLI
+- [ ] 2. Bedrock access to Nova
+- [ ] 3. One successful experiment
+- [ ] 4. One deeper path only
+- [ ] 5. Notes on what you learned
